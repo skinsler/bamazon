@@ -21,20 +21,20 @@ connection.connect(function(err) {
   afterConnection();
 });
 
-function afterConnection() {
-    connection.query("SELECT * FROM products", function(err, res) {
-        if (err) throw err;
-        res.forEach(function (item) {
-            console.log(item.product_name);
-            // =================${item.title}===================
-            // Artist: ${item.artist}
-            // Genre: ${item.genre}
+// function afterConnection() {
+//     connection.query("SELECT * FROM products", function(err, res) {
+//         if (err) throw err;
+//         res.forEach(function (item) {
+//             console.log(item.product_name);
+//             // =================${item.title}===================
+//             // Artist: ${item.artist}
+//             // Genre: ${item.genre}
     
-        });   
+//         });   
         
-    connection.end();
-  });
-}
+//     connection.end();
+//   });
+// }
 
 function afterConnection() {
   connection.query("SELECT * FROM products", function(err, res) {
@@ -43,7 +43,7 @@ function afterConnection() {
       purchasePrompt(res);
 
       
-  connection.end();
+
 });
 }
 
@@ -63,12 +63,7 @@ function displayAllProducts(res) {
 }
 
 function purchasePrompt (res) {
-  // var ids = [];
-  // res.forEach(function (item) {
-  //   ids.push(item.id);
-  // });
 
-  // console.log(ids);
   inquirer
   .prompt([
     {
@@ -106,4 +101,17 @@ function order(id, quantity) {
   console.log("ORDER!"
    + id + quantity);
 
+   connection.query("SELECT * FROM products WHERE id = " + id, function(err, res) {
+    if (err) throw err;
+
+    if (!res.id) {
+      console.log ("Ivalid Product ID");
+    }
+    console.log(res);
+
+
+
+  connection.end(); 
+  
+  });
 }
