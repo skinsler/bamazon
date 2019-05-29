@@ -10,7 +10,7 @@ In this activity, I creating CLI storefront with the MySQL skills I learned this
 
 ### Insufficient Quantity
 
-![insufficient-quantity](docs/screenshots/insufficient-quantity.gif?raw=true "insufficient-quantity)
+![insufficient-quantity](docs/screenshots/insufficient-quantity.gif?raw=true "insufficient-quantity")
 
 ### Invalid ID
 
