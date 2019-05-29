@@ -17,7 +17,6 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("connected as id " + connection.threadId);
   afterConnection();
 });
 
@@ -61,8 +60,6 @@ function purchasePrompt (res) {
     }
   ])
   .then(function(inquirerResponse) {
-    console.log(inquirerResponse.purchaseId);
-
 
     if (inquirerResponse.purchaseQuantity < 0) {
       console.log("Purchase quantity must be greater than zero");
@@ -85,23 +82,27 @@ function order(id, quantity) {
    connection.query("SELECT * FROM products WHERE id = " + id, function(err, res) {
     if (err) throw err;
 
-    if (!res[0].id) {
+    if (!res.id) {
+      console.log("");
       console.log ("Ivalid Product ID");
-    }
-
-    if (quantity <= res[0].stock_quantity) {
-			var total = res[0].price * quantity;
-			console.log("Your total is $" + total + " for " + quantity + " " + res[0].product_name + "(s)");
-
-      var newQuantity = res[0].stock_quantity - quantity;
-      connection.query("UPDATE products SET stock_quantity = " + newQuantity + " WHERE id = " + id);
       afterConnection();
     }
     else {
-      console.log("");
-      console.log("Insufficient Quantity!");
-      afterConnection();
-      
+
+      if (quantity <= res[0].stock_quantity) {
+        var total = res[0].price * quantity;
+        console.log("Your total is $" + total + " for " + quantity + " " + res[0].product_name + "(s)");
+
+        var newQuantity = res[0].stock_quantity - quantity;
+        connection.query("UPDATE products SET stock_quantity = " + newQuantity + " WHERE id = " + id);
+        afterConnection();
+      }
+      else {
+        console.log("");
+        console.log("Insufficient Quantity!");
+        afterConnection();
+        
+      }
     }
   
   });
