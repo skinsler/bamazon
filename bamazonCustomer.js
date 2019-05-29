@@ -82,7 +82,7 @@ function order(id, quantity) {
    connection.query("SELECT * FROM products WHERE id = " + id, function(err, res) {
     if (err) throw err;
 
-    if (!res.id) {
+    if (res.length <= 0) {
       console.log("");
       console.log ("Ivalid Product ID");
       afterConnection();
