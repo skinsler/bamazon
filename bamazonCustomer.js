@@ -21,33 +21,17 @@ connection.connect(function(err) {
   afterConnection();
 });
 
-// function afterConnection() {
-//     connection.query("SELECT * FROM products", function(err, res) {
-//         if (err) throw err;
-//         res.forEach(function (item) {
-//             console.log(item.product_name);
-//             // =================${item.title}===================
-//             // Artist: ${item.artist}
-//             // Genre: ${item.genre}
-    
-//         });   
-        
-//     connection.end();
-//   });
-// }
-
 function afterConnection() {
   connection.query("SELECT * FROM products", function(err, res) {
       if (err) throw err;
       displayAllProducts(res);
       purchasePrompt(res);
 
-      
-
 });
 }
 
 function displayAllProducts(res) {
+  console.log("");
   res.forEach(function (item) {
     let idString = "ID: " + item.id.toString().padEnd(3, " ");
     let productNameString = "Product: " + item.product_name.toString().padEnd(28, " ");
@@ -56,9 +40,8 @@ function displayAllProducts(res) {
     let stockQuantityString = "Stock: " + item.stock_quantity.toString().padEnd(10, " ");
 
     console.log(idString + productNameString + categoryString + priceString + stockQuantityString);
-    
-
-});   
+});
+  console.log("");     
 
 }
 
@@ -98,20 +81,28 @@ function purchasePrompt (res) {
   };
 
 function order(id, quantity) {
-  console.log("ORDER!"
-   + id + quantity);
 
    connection.query("SELECT * FROM products WHERE id = " + id, function(err, res) {
     if (err) throw err;
 
-    if (!res.id) {
+    if (!res[0].id) {
       console.log ("Ivalid Product ID");
     }
-    console.log(res);
 
+    if (quantity <= res[0].stock_quantity) {
+			var total = res[0].price * quantity;
+			console.log("Your total is $" + total + " for " + quantity + " " + res[0].product_name + "(s)");
 
-
-  connection.end(); 
+      var newQuantity = res[0].stock_quantity - quantity;
+      connection.query("UPDATE products SET stock_quantity = " + newQuantity + " WHERE id = " + id);
+      afterConnection();
+    }
+    else {
+      console.log("");
+      console.log("Insufficient Quantity!");
+      afterConnection();
+      
+    }
   
   });
 }
